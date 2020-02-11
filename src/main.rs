@@ -1,95 +1,62 @@
+#![windows_subsystem = "windows"]
+
 pub mod structs;
+pub mod utils;
 
 extern crate reqwest;
 extern crate serde;
 extern crate serde_json;
-extern crate winapi;
+extern crate wallpaper;
+extern crate online;
 
 use std::thread::sleep;
 use std::time::Duration;
-use std::path::Path;
-use std::fs::File;
-use std::ffi::OsStr;
-use std::path::PathBuf;
-use std::error::Error;
-use std::os::raw::c_void;
-use std::iter;
-use std::os::windows::ffi::OsStrExt;
-use std::io;
-use winapi::um::winuser::SystemParametersInfoW;
-use winapi::um::winuser::SPIF_SENDCHANGE;
-use winapi::um::winuser::SPIF_UPDATEINIFILE;
-use winapi::um::winuser::SPI_SETDESKWALLPAPER;
 
 const BASE_PATH: &'static str = "https://smnrer.lh1.in/wallpapers";
-const WALLPAPERS_DIR: &'static str = "C:\\wallpapers";
 
 fn main() {
-    let sleep_time = 60;
-    let mut last_version = 0;
+    let sleep_time = 30;
+    let mut current_version = 0;
+
+    println!("Config: sleep time: '{}'; current version: '{}'", sleep_time, current_version);
+
     loop {
-        let wallpapers_response =
-            reqwest::blocking::get(&format!("{}/wallpapers.json", BASE_PATH))
+        if online::online(None).unwrap_or(false) {
+            println!("Fetching info from server...");
+
+            let wallpapers_response = reqwest::blocking::get(&format!("{}/wallpapers.json", BASE_PATH))
                 .unwrap()
                 .text()
                 .unwrap();
 
-        let wallpapers: structs::Wallpapers = serde_json::from_str(&wallpapers_response).unwrap();
+            let wallpapers: structs::Wallpapers = serde_json::from_str(&wallpapers_response).unwrap();
 
-        if last_version == wallpapers.version {
-            continue;
-        }
-        
-        let download_url;
+            println!("Current version: {}", current_version);
+            println!("Wallpaper response dump: {:?}", wallpapers);
 
-        if wallpapers.download_url.starts_with("http://") || wallpapers.download_url.starts_with("https://") {
-            download_url = wallpapers.download_url;
+            if current_version != wallpapers.version {
+                let download_url;
+
+                if wallpapers.download_url.starts_with("http://")
+                    || wallpapers.download_url.starts_with("https://")
+                {
+                    download_url = wallpapers.download_url;
+                } else {
+                    download_url = format!("{}/{}", BASE_PATH, wallpapers.download_url);
+                }
+
+                println!("Setting up wallpaper from url: {}", download_url);
+
+                wallpaper::set_from_url(&download_url).unwrap();
+
+                current_version = wallpapers.version;
+            }
         } else {
-            download_url = format!("{}/{}", BASE_PATH, wallpapers.download_url);
+            println!("No internet connection!");
         }
 
-        let destination_file = format!("{}\\wallpaper-{}.{}", WALLPAPERS_DIR, wallpapers.version, Path::new(&download_url).extension().and_then(OsStr::to_str).unwrap());
+        println!("Sleeping {} seconds", sleep_time);
 
-        create_dir(&PathBuf::from(&WALLPAPERS_DIR));
-
-        let mut file = { File::create(&destination_file).unwrap() };
-
-        reqwest::blocking::get(&download_url).unwrap().copy_to(&mut file).unwrap();
-
-        set_from_path(&destination_file);
-        
-        last_version = wallpapers.version;
-        
         sleep(Duration::from_secs(sleep_time));
-    }
-}
-
-pub fn create_dir(path: &PathBuf) {
-    if !path.exists() {
-        match std::fs::create_dir_all(&path) {
-            Ok(()) => println!("{} dir created successfully!", &path.display()),
-            Err(e) => panic!("Error {}", e.description()),
-        }
-    } else if !path.is_dir() {
-        panic!(
-            "{} already exists and is not a directory, exiting.",
-            &path.display()
-        );
-    }
-}
-
-pub fn set_from_path(path: &str) {
-    unsafe {
-        let path = OsStr::new(path)
-            .encode_wide()
-            // append null byte
-            .chain(iter::once(0))
-            .collect::<Vec<u16>>();
-        let successful = SystemParametersInfoW(
-            SPI_SETDESKWALLPAPER,
-            0,
-            path.as_ptr() as *mut c_void,
-            SPIF_UPDATEINIFILE | SPIF_SENDCHANGE,
-        ) == 1;
     }
 }

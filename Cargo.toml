@@ -24,7 +24,8 @@ lto = true
 debug = false
 
 [dependencies]
+wallpaper = { git = "https://github.com/ElXreno/wallpaper.rs" }
 reqwest = { version = "0.10.1", features = ["blocking"] }
-serde = { version = "1.0.104", features = ["derive"] }
+serde = "1.0.104"
 serde_json = "1.0.47"
-winapi = { version = "0.3.8", features = ["winuser"] }
+online = "0.2.2"

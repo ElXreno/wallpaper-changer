@@ -864,6 +864,15 @@ dependencies = [
 ]
 
 [[package]]
+name = "online"
+version = "0.2.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "848cc118fc912a01b072fff732fd8c12c58ed779b3d537cf9ce89e50fab69191"
+dependencies = [
+ "simple-error",
+]
+
+[[package]]
 name = "openssl"
 version = "0.10.28"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1422,6 +1431,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "simple-error"
+version = "0.2.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "339844c9af2d844b9230bb28e8f819a7790cbf20a29b5cbd2b59916a03a1ef51"
+
+[[package]]
 name = "slab"
 version = "0.4.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1790,9 +1805,8 @@ checksum = "078775d0255232fb988e6fccf26ddc9d1ac274299aaedcedce21c6f72cc533ce"
 
 [[package]]
 name = "wallpaper"
-version = "2.0.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9e616c4d1c623f9ef8b94d9ecd213c85d76957311d5645a7104c0bbdc36676bf"
+version = "2.0.2"
+source = "git+https://github.com/ElXreno/wallpaper.rs#b88f5ed584925b8415f901df8808d8dd39928d2b"
 dependencies = [
  "dirs",
  "enquote",
@@ -1806,6 +1820,7 @@ dependencies = [
 name = "wallpaper-changer"
 version = "0.1.0"
 dependencies = [
+ "online",
  "reqwest 0.10.1",
  "serde",
  "serde_json",

@@ -6,5 +6,5 @@ use serde::Deserialize;
 pub struct Wallpapers {
     pub download_url: String,
     pub fallback_url: String,
-    pub version: i16
+    pub version: i16,
 }
