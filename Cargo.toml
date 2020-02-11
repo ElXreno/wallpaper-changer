@@ -1,0 +1,30 @@
+[package]
+name = "wallpaper-changer"
+version = "0.1.0"
+authors = ["ElXreno <elxreno@gmail.com>"]
+edition = "2018"
+
+# Profiles
+[profile.dev]
+opt-level = 1
+overflow-checks = true
+debug-assertions = true
+panic = "abort"
+codegen-units = 8
+lto = false
+incremental = true
+
+[profile.release]
+opt-level = 3
+codegen-units = 1
+overflow-checks = false
+debug-assertions = false
+panic = 'abort'
+lto = true
+debug = false
+
+[dependencies]
+reqwest = { version = "0.10.1", features = ["blocking"] }
+serde = { version = "1.0.104", features = ["derive"] }
+serde_json = "1.0.47"
+winapi = { version = "0.3.8", features = ["winuser"] }
