@@ -1,6 +1,5 @@
 cache:
   - c:\cargo\registry
-  - c:\projects\wallpaper-changer\target
 
 init:
   - mkdir c:\cargo
@@ -21,10 +20,10 @@ environment:
       CHANNEL: stable
       BITS: 32
       MSYS2: 1
-    #- TARGET: x86_64-pc-windows-gnu
-    #  CHANNEL: stable
-    #  BITS: 64
-    #  MSYS2: 1
+    - TARGET: x86_64-pc-windows-gnu
+      CHANNEL: stable
+      BITS: 64
+      MSYS2: 1
 
 matrix:
   fast_finish: true
