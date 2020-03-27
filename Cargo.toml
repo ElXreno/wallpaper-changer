@@ -5,23 +5,10 @@ authors = ["ElXreno <elxreno@gmail.com>"]
 edition = "2018"
 
 # Profiles
-[profile.dev]
-opt-level = 1
-overflow-checks = true
-debug-assertions = true
-panic = "abort"
-codegen-units = 8
-lto = false
-incremental = true
-
 [profile.release]
-opt-level = 3
-codegen-units = 1
-overflow-checks = false
-debug-assertions = false
-panic = 'abort'
 lto = true
-debug = false
+panic = "abort"
+codegen-units = 1
 
 [dependencies]
 wallpaper = { git = "https://github.com/ElXreno/wallpaper.rs" }
