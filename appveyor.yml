@@ -16,10 +16,10 @@ environment:
     PROJECT_NAME: wallpaper-changer
     RUST_BACKTRACE: full
   matrix:
-    - TARGET: i686-pc-windows-gnu
-      CHANNEL: stable
-      BITS: 32
-      MSYS2: 1
+    # - TARGET: i686-pc-windows-gnu
+    #   CHANNEL: stable
+    #   BITS: 32
+    #   MSYS2: 1
     - TARGET: x86_64-pc-windows-gnu
       CHANNEL: stable
       BITS: 64
